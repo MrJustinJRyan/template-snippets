@@ -1,0 +1,33 @@
+<!-- Paste this button where you want to item to appear on the page -->
+<button id="tweet_button">Click to Tweet</button>
+
+<!-- Paste this script at the bottom of the page -->
+<script type="text/javascript">
+{% plugin rawtext tweet_url %}
+{% plugin rawtext tweet_text %}
+{% plugin rawtext tweet_hashtags %}
+
+$(document).ready( function () {
+	var params = {};
+
+	// Note: until we get support for escaping single quotes, they can't be used in the message.
+	{% if tweet_url %}
+	   params.url = '{{ tweet_url }}';
+	{% endif %}
+
+	{% if tweet_text %}
+	   params.text = '{{ tweet_text }}';
+	{% endif %}
+
+	{% if tweet_hashtags %}
+	   params.hashtags = '{{ tweet_hashtags }}';
+	{% endif %}
+
+	var intent_url = 'https://twitter.com/intent/tweet?' + $.param(params);
+
+	$('#tweet_button').click( function (e) {
+	   e.preventDefault();
+	   window.open(intent_url, 'tweet_intent');
+	});
+});
+</script>

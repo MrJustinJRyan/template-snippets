@@ -1,0 +1,2 @@
+## Custom Tweet Button
+Paste the button and related code into your template in the locations described in the sample.liquid file. After that, you'll have rawtext plugins in the editor for the text of the tweet, url of the tweet (optional) and hashtags to include (optional).
