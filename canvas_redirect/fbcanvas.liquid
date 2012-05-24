@@ -1,2 +1,5 @@
 {% plugin rawtext fanpage_url %}
-<meta http-equiv="refresh" content="0; URL=javascript:window.open('{{ fanpage_url }}','_top');">
+<script type="text/javascript">
+var redir = '{{ fanpage_url }}';
+setTimeout('top.location = redir;',100);
+</script>
