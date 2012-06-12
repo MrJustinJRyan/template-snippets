@@ -1,0 +1,98 @@
+/* ----------------------------
+Author: Anders Haig / anders.haig@wildfireapp.com
+---------------------------- */
+
+/* ----------------------------
+		 CSS Styles 
+---------------------------- */
+
+/* GLOBAL */
+html { 
+	width:100%;
+	overflow-x:hidden;
+	font-size: 62.5%; 
+} 
+
+body {
+
+}
+
+* { 
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;  
+            box-sizing: border-box;
+}
+
+/* TYPOGRAPHY */
+p {
+  font-size: 13px;
+  font-size: 1.3rem;
+  font-weight: normal;
+  line-height: 18px;
+  margin-bottom: 9px;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  color: #404040;
+}
+h1 {
+  margin-bottom: 18px;
+  font-size: 30px;
+  font-size: 3.0rem;
+  line-height: 36px;
+}
+h2 {
+  font-size: 24px;
+  font-size: 2.4rem;
+  line-height: 36px;
+}
+h3, h4, h5, h6 {
+  line-height: 36px;
+}
+h3 {
+  font-size: 18px;
+  font-size: 1.8rem;
+}
+h4 {
+  font-size: 16px;
+  font-size: 1.6rem;
+}
+h5 {
+  font-size: 14px;
+  font-size: 1.4rem;
+}
+h6 {
+  font-size: 13px;
+  font-size: 1.3rem;
+  color: #bfbfbf;
+  text-transform: uppercase;
+}
+
+/* STANDARD */
+.clearfix:after, .row:after { content:"."; display:block; height:0; clear:both; visibility:hidden; }
+.clearfix, .row { display:inline-block; }
+.clearfix, .row { display:block; }
+
+.consumer { width:100%; overflow:hidden; }
+.container { width:100%; margin:0 auto; }
+.row { position:relative; }
+
+/* CUSTOM */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,60 @@
+<div class="container" style="{% style background-image background %}">
+	<div class="row">
+		<div id="take_gal" style="display:none;">
+		{% plugin gallery image_gallery %}
+		{% for entry in image_gallery.entries %}
+		    <li>
+		    	<div class="gbody">{{ entry.body }}</div>
+		    	<div class="gtitle">{{ entry.title }}</div>
+		    	<div class="gdescription">{{ entry.description }}</div>
+		    </li>
+		{% endfor %}
+		</div>
+
+		<div id="put_gal"></div>
+	</div>
+</div>
+
+<!-- Required -->
+<script src="http://wildfiredocs.com/templates/assets/handlebars-1.0.0.beta.6.js" type="text/javascript"></script>
+<script src="http://wildfiredocs.com/templates/assets/gallery_helper.js" type="text/javascript"></script>
+<!--/ Required -->
+<script src="http://wildfiredocs.com/templates/assets/liteAccordion.js" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+// empty console.log for browsers lacking
+if (!window.console) window.console={log:function(){}};
+
+$(document).ready( function () {
+	{% raw %}
+	gen_gallery({
+		source: 'take_gal', 
+		template:  '<ol>'
+				 + '{{#images}}'
+				 + '<li>'
+				 + '<h2><span>{{this.title}}</span></h2>'
+				 + '<div>'
+				 + '{{#if this.url}}<a href="{{this.url}}">{{/if}}'
+				 + '<img src="{{this.src}}">'
+				 + '{{#if this.url}}</a>{{/if}}'
+				 + '{{this.desc}}'
+				 + '</div>'
+				 + '</li>'
+				 + '{{/images}}'
+				 + '</ol>',
+		target: 'put_gal'
+	});
+	{% endraw %}
+});
+
+$(document).bind('gen_gallery_complete', function () {
+	// Initialize Slider etc
+	$('#put_gal').liteAccordion({
+		"theme": "light",
+		"containerWidth": 787,
+		"slideSpeed": 400,
+		"linkable": true
+	});
+});
+</script>
