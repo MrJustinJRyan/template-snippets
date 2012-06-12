@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Gallery Helper Sample</title>
+
+    <link rel="stylesheet" type="text/css" media="all" href="css/style.css" />
+    
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+	<script src="js/handlebars-1.0.0.beta.6.js" type="text/javascript"></script>
+	<script src="js/responsiveslides.min.js"></script>
+	<script src="js/liteAccordion.js"></script>
+	<script src="gallery_helper.js" type="text/javascript"></script>
+	<script type="text/javascript" charset="utf-8">
+	$(document).ready( function () {
+		gen_gallery({
+			source: 'http://api.flickr.com/services/feeds/photos_public.gne?tags=puppy&lang=en-us&format=json&jsoncallback=?', 
+			format: 'circle-grid', // Options = 'grid', 'circle-grid', 'slider', 'panels'
+			target: 'photos'
+		});
+	});
+
+	$(document).bind('gen_gallery_complete', function () {
+		// Example with ResponsiveSlides
+		//$('#photos').responsiveSlides();
+
+		//$("#photos").responsiveSlides({
+		//  pagination: true
+		//});
+
+		//$('#panels').liteAccordion();
+	});
+	</script>
+</head>
+
+<body>
+<div id="wrapper">
+	<ul id="photos"></ul>
+	<div id="panels"></div>
+</div><!-- end #wrapper -->
+</body>
+</html>
