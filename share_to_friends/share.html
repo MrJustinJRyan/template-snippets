@@ -1,0 +1,281 @@
+<div class="likebox_share" data-name="{{ entry.title | escape }}" data-description="{{ entry.description | escape }}">
+	<button class="share action_button">Share</button>
+	<span style="display:none;">{{ entry.body }}</span>
+</div>
+
+
+<div id="dialog">
+	<div id="contents">
+		<div id="main_content" class="loading">
+			<div id="title_bar">Share this</div>
+			
+			<div id="message_wrap">
+				<div id="user_cnt" class="message_section">
+					<div id="select_friend">
+						<input type="text" id="friend_input" name="friend_input" value="Type a friend's name..." placeholder="Type a friend's name..." />
+					</div>
+					
+					<div id="message_text">
+						<textarea cols="35" rows="4" id="message" name="message" title="Write Something..." placeholder="Write Something...">Write Something...</textarea>
+					</div>
+				</div>
+				
+				<div id="fixed_cnt" class="message_section">
+					<div id="message_settings">
+						<div id="share_media">
+							<a class="UIMediaItem_Wrapper" href="" target="_blank"><img id="share_thumb" src="" alt=""></a>
+						</div>
+						<div id="share_info">
+							<div id="share_title" class="UIStoryAttachment_Title">
+								<a href="" target="_blank">My Sample Title</a>
+							</div>
+							<div id="share_caption" class="UIStoryAttachment_Caption">wildfireapp.com</div>
+							<div id="share_description" class="UIStoryAttachment_Copy">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!-- #main_content -->
+
+		<div id="dialog_actions">
+			<div id="action_left">
+				<button class="action_button" id="cancel" name="cancel">Cancel</button>
+			</div>
+			
+			<div id="action_right">
+				<button class="action_button" id="share" name="share">Share</button>
+			</div>
+		</div>
+	</div><!-- end #contents -->
+</div><!-- end #dialog -->
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+{% plugin rawtext share_link %}
+{% plugin rawtext share_caption %}
+<script type="text/javascript">
+function wallShare(args) {
+	/* Global variables */
+	var loggedIn = false;
+	var preloaded = false;
+	var selected = '';
+	var friends = null;
+	var access_token = '';
+	
+	/* Sharing Settings (to be made options later) */
+	var share_message = ''; // Cannot be preset - Facebook Policy
+	var share_link = '{{ share_link }}';
+	var share_picture = '';
+	var share_name = '';
+	var share_caption = '{{ share_caption }}';
+	var share_description = '';
+	
+	/* Case Insensitive :contains */
+	$.extend($.expr[':'], {
+	  'containsi': function (elem, i, match, array) {
+	    return (elem.textContent || elem.innerText || '').toLowerCase()
+	    .indexOf((match[3] || "").toLowerCase()) >= 0;
+	  }
+	});
+	
+	function loginFacebook() {	
+		FB.login(function(response) {
+			if (response.authResponse) {	
+				loggedIn = true;
+				access_token = response.authResponse.accessToken;
+				
+				$('#dialog').animate({
+					opacity: 1,
+					top: '+=400px'
+				}, 500, function () {
+					// Animation complete.
+				});
+				
+				if (!preloaded) {
+					getFriends();
+				}
+			} else {
+				loggedIn = false;
+			}
+		},{scope:'publish_stream'});
+	}
+
+	//gets the list of friends of the logged in person
+	function getFriends() {
+		if (!loggedIn) {
+			loginFacebook();
+		} else if (loggedIn) {
+			processFriends();
+		}
+	}
+	
+	function processFriends() {		
+		$('#friend_input').autocomplete({
+			source: function(request, response) {
+				FB.api({
+					method: 'fql.query',
+					query: 'SELECT name, uid FROM user WHERE uid IN ( SELECT uid2 FROM friend WHERE uid1=me()) AND strpos(lower(name),"' + request.term.toLowerCase() + '") >=0'
+				}, function(data) {
+				    response( 
+						$.map(data, function(item) {
+							return {
+								label: item.name,
+								value: item.uid
+							}
+						})
+					);
+				});
+			},
+			minLength: 2,
+			appendTo: '#select_friend',
+			select: function(event, ui) {
+				event.preventDefault();
+				$(this).val(ui.item.label);
+				selected = ui.item.value;
+			},
+			open: function() {
+				$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+			},
+			close: function() {
+				$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+			}
+		});
+		//$('#main_content').removeClass('loading');
+	}
+	
+	
+	function post() {
+		share_message = $('#message').val();
+		//console.log(share_message);
+
+		var obj = {
+			message: share_message,
+			link: share_link,
+			picture: share_picture,
+		    name: share_name,
+		    caption: share_caption,
+		    description: share_description
+		}
+		
+		$('#main_content').addClass('loading');
+		$('#message_wrap').css('visibility','hidden');
+		
+		FB.api('/' + selected + '/feed', 'post', obj, function(response) {
+			console.log(response);
+			  if (!response || response.error) {
+			      	//alert('Something went wrong!');
+			  } else {
+			        //console.log('Post ID: ' + response.id);
+				    $('#dialog').animate({
+						opacity: 0,
+						top: '-340px'
+					}, 300, function () {
+						// Animation complete
+						$('#friend_input').val('Type a friend\'s name...').css('color','#777');
+						$('#message').val('Write Something...').css('color','#777');
+						$('#message_wrap').css('visibility','visible');
+					});
+			  }
+		});
+	}
+
+	function sharingInit() {
+		FB.getLoginStatus(function(response) {
+			if (response.authResponse) {				
+		  		access_token = response.authResponse.accessToken;
+				loggedIn = true;
+				preloaded = true;
+				getFriends();
+		  	} else {
+				loggedIn = false;
+		  	}
+		});
+		
+		$('.likebox_share').live('click', function (e) {
+			e.preventDefault();
+			
+			// Get Specific Items
+			share_name = $(this).attr('data-name');
+			share_description = $(this).attr('data-description');
+			share_picture = 'https:' + $(this).find('img').attr('src');
+			
+			// Setup Preview
+			$('#share_thumb').attr('src', share_picture);
+			$('#share_title a').html(share_name);
+			$('#share_title a').attr('href', share_link);
+			$('#share_caption').html(share_caption);
+			$('#share_description').html(share_description);
+			
+			if (loggedIn === true) {
+				$('#dialog').animate({
+					opacity: 1,
+					top: '260px'
+				}, 500, function () {
+					// Animation complete.
+				});
+				if (!preloaded) {
+					getFriends();
+					preloaded = true;
+				}
+			} else {
+				loginFacebook();
+			}
+		});
+		
+		$('#cancel').click( function () {
+			$('#dialog').animate({
+				opacity: 0,
+				top: '-340px'
+			}, 300, function () {
+				// Animation complete
+				$('#friend_input').css('color','#777');
+				$('#message').val('Write Something...').css('color','#777');
+			});
+		});
+		
+		$('#share').click( function () {
+			// TODO - If everything exists
+			post();
+		});
+	}
+
+	// Text Input Focus Settings
+	$('#friend_input').focus( function () {
+		if ($(this).val() == 'Type a friend\'s name...') {
+			$(this).val('');
+		}
+	});
+	
+	$('#friend_input').blur( function () {
+		if ($(this).val() == '') {
+			$(this).val('Type a friend\'s name...').css('color','#777');
+		} else {
+			$(this).css('color','#555');
+		}
+	});
+	
+	// Text Area Focus Settings
+	$('#message').focus( function () {
+		if ($(this).val() == 'Write Something...') {
+			$(this).val('');
+		}
+	});
+	
+	$('#message').keyup( function () {
+		if ($(this).val() == '') {
+			$(this).val('Write Something...').css('color','#777');
+		} else {
+			$(this).css('color','#555');
+		}
+	});
+
+	$(document).bind('afterfbinit', function () {
+		sharingInit();
+	});
+}
+
+wallShare({
+	'option': 'value',
+	'option': 'value'
+});
+</script>
