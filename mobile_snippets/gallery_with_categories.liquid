@@ -1,0 +1,103 @@
+{% plugin gallery my_gallery %}
+{% plugin rawtext page_title %}
+
+<!-- START Gallery with Categories -->
+{% if my_gallery.has_categories %}
+	<div data-role="page" data-theme="a" id="home">
+		<div data-role="header">
+			<h1>{{ page_title }}</h1>
+		</div><!-- /header -->
+
+		<div data-role="content">
+			<div id="voting_list">
+				<ul data-role="listview">
+				    {% for category in my_gallery.categories %}
+						<li>
+							<a href="#cat_{{ forloop.index }}" data-transition="slide">
+					        	<h3>{{ category.title }}</h3>
+							</a>
+						</li>
+				    {% endfor %}
+				</ul>
+			</div>
+		</div><!-- /content -->
+	</div><!-- /page -->
+
+	{% for category in my_gallery.categories %}
+		<div data-role="page" data-theme="a" id="cat_{{ forloop.index }}">
+			<div data-role="header">
+				<a href="#home" data-rel="back" data-iconpos="notext" data-role="button" data-transition="slide" data-direction="reverse" data-icon="arrow-l">Back</a>
+				<h1>{{ category.title }}</h1>
+			</div><!-- /header -->
+
+			<div data-role="content">
+				<ul data-role="listview">
+				    {% for entry in category.entries %}
+						<li>
+							<a href="#entry_{{ category.title }}_{{ forloop.index }}" data-transition="slide">
+								{{ entry.body }}
+					        	<h3>{{ entry.title }}</h3>
+					        	<p>{{ entry.description | strip_html | truncatewords:12 }}</p>
+							</a>
+						</li>
+				    {% endfor %}
+				</ul>
+			</div><!-- /content -->
+		</div><!-- /page -->
+
+		{% for entry in category.entries %}
+		<div data-role="page" data-theme="a" id="entry_{{ category.title }}_{{ forloop.index }}">
+			<div data-role="header">
+				<a href="#home" data-rel="back" data-iconpos="notext" data-role="button" data-transition="slide" data-direction="reverse" data-icon="arrow-l">Back</a>
+				<h1>{{ category.title }}</h1>
+			</div><!-- /header -->
+
+			<div data-role="content" class="single_entry">
+				<div class="entry_body">{{ entry.body }}</div>
+				<h3 class="entry_title">{{ entry.title }}</h3>
+				<div class="entry_description">{{ entry.description }}</div>
+			</div><!-- /content -->
+		</div><!-- /page -->
+    	{% endfor %}
+    {% endfor %}
+<!-- END Gallery with Categories -->
+{% else %}
+<!-- START Gallery (No Categories) -->
+	<div data-role="page" data-theme="a" id="home">
+		<div data-role="header">
+			<h1>{{ page_title }}</h1>
+		</div><!-- /header -->
+
+		<div data-role="content">
+			<div id="voting_list">
+				<ul data-role="listview">
+				    {% for entry in my_gallery.entries %}
+						<li>
+							<a href="#entry_{{ forloop.index }}" data-transition="slide">
+								{{ entry.body }}
+					        	<h3>{{ entry.title }}</h3>
+								<p>{{ entry.description | strip_html | truncatewords:12 }}</p>
+							</a>
+						</li>
+				    {% endfor %}
+				</ul>
+			</div>
+		</div><!-- /content -->
+	</div><!-- /page -->
+
+	{% for entry in my_gallery.entries %}
+		<div data-role="page" data-theme="a" id="entry_{{ forloop.index }}">
+			<div data-role="header">
+				<a href="#home" data-rel="back" data-iconpos="notext" data-role="button" data-transition="slide" data-direction="reverse" data-icon="arrow-l">Back</a>
+				<h1>{{ category.title }}</h1>
+			</div><!-- /header -->
+
+			<div data-role="content" class="single_entry">
+				<div class="entry_body">{{ entry.body }}</div>
+				<h3 class="entry_title">{{ entry.title }}</h3>
+				<div class="entry_description">{{ entry.description }}</div>
+			</div><!-- /content -->
+		</div><!-- /page -->
+    {% endfor %}
+{% endif %}
+<!-- END Gallery (No Categories) -->
