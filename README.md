@@ -18,8 +18,16 @@ A JavaScript snippet to allow the easy creation of a fan meter (visual represent
 *Starter Template*  
 A great start to new projects. Includes a default 6 column grid system, jQuery Mobile additions for mobile.liquid and some other helpful snippets.
 
+*Handlebars Experiments*    
+These are currently undocumented and not ready for use.
 
-## Coming soon
+*Mobile Snippets*    
+These are currently undocumented and not ready for use.
+
+*Share to Friend's Wall*    
+This is currently undocumented and not ready for use.
+
+## Coming
 Smart Image Thumbnail Creation  
-Easy Gallery / Slider Generation Plugin
+Easy Gallery / Slider Generation Plugin  
 Live (moving) Countdown from Countdown Plugin  
