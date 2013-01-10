@@ -1,0 +1,21 @@
+#Microsite & Mobile (Non-Facebook) Like-Gate
+
+There are three divs for the three different states:
+
+1. <div class="auth not_connected">
+
+The content contained in this div appears when a user HAS NOT authorized your app. In order for a user to progress to the next state, it's necessary to have a button that calls the "user_login()" method somewhere in this div. It is possible for the user to have liked your page and this content still appears. In that case, after the user authorizes your app, they'll see the final content (instead of a like button).
+
+2. <div class="likes not_fans">
+
+The content contained in this div appears when a user has authorized your app, but HAS NOT liked the page specified in the raw text plugin in page manager. In order for a user to progress to the next state, it's neccessary to have a "Like" button attached to the page specified in the raw text plugin in page manager that the user can click on to like that specific page. It's important to note that in the raw text plugin in page manager, the numerical page id must be used. The vanity text id WILL NOT WORK. However, markup associated with the "Like" button on the page may use either the numerical id or vanity text id
+
+3. <div class="likes fans_only">
+
+The content that appears in this div is what is revealed to the user after they authorize your app, and like the page you specified.
+
+Notes:
+
+-The id entered into the "Fan page" raw text plugin in page manager, must be the numerical id and not the vanity text id
+-It is possible for users to have liked your page, and still be unable to see your final content. If this is happening, it most likely means that the user has not authorized your app
+-

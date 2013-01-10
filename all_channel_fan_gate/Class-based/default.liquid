@@ -73,21 +73,21 @@ function check_fan_status() {
 	    	FB.api('/me/likes/' + page_id, function(response) {
 			    if (response.data) {
 			        if (!isEmpty(response.data)) {
-						user_auth = true;
-						fan_of_page = true;
+									user_auth = true;
+									fan_of_page = true;
 						
-						user_fan_of_page();
-			        } else {
-						user_auth = true;
-						fan_of_page = false;
+									user_fan_of_page();
+						        } else {
+									user_auth = true;
+									fan_of_page = false;
 				
-						user_not_fan();
-					}
+									user_not_fan();
+							}
 			    } else {
-					// might be logged in but not authed
-					user_not_fan();
+							// might be logged in but not authed
+							user_not_fan();
 			    }
-			});
+				});
 	    } else {
 	    	//user_login();
 	    }
